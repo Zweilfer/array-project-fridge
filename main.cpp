@@ -30,7 +30,7 @@ int main() {
             case 0: cout << "Goodbye.\n"; break;
             default: cout << "Invalid menu.\n";
       } 
-    }while (menu != 0);
+    } while (menu != 0);
 
     return 0;
 }
