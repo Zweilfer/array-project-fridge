@@ -42,7 +42,7 @@ void display() {
         return;
     }
 
-    cout << "\n----- Fridge items -----\n";
+    cout << "\n===== Fridge items =====\n";
     for (int i = 0; i < countItem; i++) {
         cout << i + 1 << ". "
              << fridge[i].name << " | "
@@ -144,7 +144,63 @@ void deleteItem() {
 }
 
 void pickItems() {
-  
+    int n, useQty;
+    string name;
+    string summary = "";
+
+    if (countItem == 0) {
+        cout << "No items to pick.\n";
+        return;
+    }
+
+    display();
+    cout << "How many items to pick: ";
+    cin >> n;
+
+    for (int k = 0; k < n; k++) {
+        cin.ignore();
+        cout << "Name of item " << k + 1 << ": ";
+        getline(cin, name);
+
+        cout << "Quantity to use: ";
+        cin >> useQty;
+
+        int found = -1;
+        for (int i = 0; i < countItem; i++) {
+            if (fridge[i].name == name) {
+                found = i;
+                break;
+            }
+        }
+
+        if (found == -1) {
+            cout << name << " not found.\n";
+            continue;
+        }
+
+        if (useQty <= 0) {
+            cout << "Invalid quantity.\n";
+            continue;
+        }
+
+        if (useQty > fridge[found].qty) {
+            cout << "Not enough stock. Remaining: " << fridge[found].qty << "\n";
+            continue;
+        }
+
+        fridge[found].qty -= useQty;
+        summary += fridge[found].name + " x " + to_string(useQty) + "\n";
+
+        if (fridge[found].qty == 0) {
+            for (int i = found; i < countItem - 1; i++) {
+                fridge[i] = fridge[i + 1];
+            }
+            countItem--;
+        }
+    }
+
+    cout << "\n===== Picked items =====\n" << summary;
+    saveHistory(summary);
 }
 
 void checkExpire() {
@@ -200,6 +256,6 @@ void saveHistory(const string &detail) {
     ofstream file("history.txt", ios::app);
     if (!file) return;
 
-    file << "===== Picked items =====\n" << detail << "\n";
+    file << "\n===== Picked items =====\n" << detail << "\n";
     file.close();
 }
