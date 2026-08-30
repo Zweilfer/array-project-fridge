@@ -34,12 +34,12 @@ void search() {
   cout << "Enter keyword: ";
   getline(cin, keyword);
 
-  cout << "\n===== Srerch Results =====n";
+  cout << "\n===== Srerch Results =====\n";
   for (int i = 0; i < countItem; i++) {
     if ((choice == 1 && fridge[i].name == keyword) ||
         (choice == 2 && fridge[i].type == keyword)) {
       cout << "- " << fridge[i].name << " | " << fridge[i].type << " |expire "
-           << fridge[i].expire << " |qty " << fridge[i].qty << "/n";
+           << fridge[i].expire << " |qty " << fridge[i].qty << "\n";
       found = 1;
     }
   }
