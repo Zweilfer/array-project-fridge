@@ -23,7 +23,7 @@ int main() {
       case 2: search(); break;
       case 3: insert(); break;
       case 4: deleteItem(); break;
-      case 5: pickItem(); break;
+      case 5: pickItems(); break;
       case 6: checkExpire(); break;
       case 7: saveFile(); break;
       case 0: printf("Goodbye.\n"); break;
