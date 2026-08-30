@@ -71,7 +71,7 @@ void search() {
             cout << "- " << fridge[i].name
                  << " | " << fridge[i].type
                  << " |expire " << fridge[i].expire
-                 << " |qty " << fridge[i].qty << "/n";
+                 << " |qty " << fridge[i].qty << "\n";
             found = 1;
         }
     }
