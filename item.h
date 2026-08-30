@@ -24,6 +24,6 @@ void deleteItem();
 void pickItems();
 void checkExpire();
 void saveFile();
-void saveHistory(coust string &detail);
+void saveHistory(const string &detail);
 
 #endif
