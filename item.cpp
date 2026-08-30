@@ -79,7 +79,23 @@ void insert() {
 }
 
 void deleteItem() {
-  
+  if (countItem == 0) {
+    cout << "Fridge is empty.\n";
+    return;
+  }
+  display();
+  int choice;
+  cout << "Enter item number to delete (1 to " << countItem << "): ";
+  cin >> choice;
+  if (choice < 1 || choice > countItem) {
+    cout << "Invalid item number.\n";
+    return;
+  }
+  for (int i = choice - 1; i < countItem - 1; i++) {
+    fridge[i] = fridge[i + 1];
+  }
+  countItem--;
+  cout << "Item deleted successfully.\n";
 }
 
 void pickItems() {
