@@ -56,7 +56,26 @@ void search() {
 }
 
 void insert() {
-  
+  if (countItem >= MAX) {
+    cout << "Fridge is full. Cannot insert more items.\n";
+    return;
+  } else {
+    cout << "Enter item name: ";
+    cin.ignore();
+    getline(cin, fridge[countItem].name);
+
+    cout << "Enter item type: ";
+    getline(cin, fridge[countItem].type);
+
+    cout << "Enter expiration date (YYYY-MM-DD): ";
+    getline(cin, fridge[countItem].expire);
+
+    cout << "Enter quantity: ";
+    cin >> fridge[countItem].qty;
+
+    countItem++;
+    cout << "Item inserted successfully.\n";
+  }
 }
 
 void deleteItem() {
