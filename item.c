@@ -21,7 +21,26 @@ void display() {
 }
 
 void search() {
-  
+  int choice;
+  char keyword[50]
+  int found  = 0;
+
+  printf("\nSerch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ");
+  scanf("%d", &choice);
+  printf("Enter keyword: );
+  scanf(" %[^\n]", keyword);
+
+  printf("\n--- Srerch Results ---n");
+  for (int i = 0; i < count; i++){
+     if ((choice == 1 && strcasecmp(fridge[i].name, keyword) == 0)||
+         (choice == 2 && strcasecmp(fridge[i].type, keyword) == 0)) {
+         printf("- %s | %s |expire %s |qty %d/n" fridge[i].name, fridge[i].type, fridge[i].expire, fridge[i].qty);
+         found = 1;
+     }
+  }
+  if (!found) {
+      print("No items found matching '%s'.\n", keyword);
+  }
 }
 
 void insert() {
