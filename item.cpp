@@ -53,32 +53,39 @@ void display() {
 }
 
 void search() {
-    int choice;
-    string keyword;
-    int found = 0;
+  int choice;
+  string keyword;
+  int found = 0;
 
-    cout << "\nSearch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ";
-    cin >> choice;
-    cin.ignore();
-
-    cout << "Enter keyword: ";
-    getline(cin, keyword);
-
-    cout << "\n===== Srerch Results =====\n";
-    for (int i = 0; i < countItem; i++) {
-        if ((choice == 1 && fridge[i].name == keyword) ||
-            (choice == 2 && fridge[i].type == keyword)) {
-            cout << "- " << fridge[i].name
-                 << " | " << fridge[i].type
-                 << " |expire " << fridge[i].expire
-                 << " |qty " << fridge[i].qty << "\n";
-            found = 1;
-        }
+  cout << "\nSearch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ";
+  while (true) {
+    if (cin >> choice && (choice == 1 || choice == 2)) {
+      break;
     }
+    cout << "Invalid input. Please enter 1 or 2 only: ";
+    cin.clear();
+    cin.ignore(1000, '\n');
+  }
+  cin.ignore(1000, '\n');
 
-    if (!found) {
-        cout << "No items found matching '" << keyword << "'.\n";
+  cout << "Enter keyword: ";
+  getline(cin, keyword);
+
+  cout << "\n===== Search Results =====\n";
+  for (int i = 0; i < countItem; i++) {
+    if ((choice == 1 && fridge[i].name == keyword) ||
+        (choice == 2 && fridge[i].type == keyword)) {
+      cout << "- " << fridge[i].name
+           << " | " << fridge[i].type
+           << " | expire " << fridge[i].expire
+           << " | qty " << fridge[i].qty << "\n";
+      found = 1;
     }
+  }
+
+  if (!found) {
+    cout << "No items found matching '" << keyword << "'.\n";
+  }
 }
 
 void insert() {
