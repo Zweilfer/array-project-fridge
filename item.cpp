@@ -103,7 +103,35 @@ void pickItems() {
 }
 
 void checkExpire() {
-  
+  if (countItem == 0) {
+    cout << "Fridge is empty.\n";
+    return;
+  }
+
+  string currentDate;
+
+  cout << "Enter current date (YYYY-MM-DD): ";
+  cin >> currentDate;
+
+  cout << "\n===== Expired Items =====\n";
+
+  int found = 0;
+
+  for (int i = 0; i < countItem; i++) {
+
+    if (fridge[i].expire == currentDate) {
+      cout << "- " << fridge[i].name
+           << " | " << fridge[i].type
+           << " | expire " << fridge[i].expire
+           << " | qty " << fridge[i].qty << "\n";
+     
+        found = 1;
+
+    }
+  }
+  if (!found) {
+    cout << "No expired items found for the date " << currentDate << ".\n";
+  }
 }
 
 void saveFile() {
