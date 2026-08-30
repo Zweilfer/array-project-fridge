@@ -20,7 +20,7 @@ int main() {
         cin >> menu;
 
     switch (menu){
-      case 1: display(); break;
+            case 1: display(); break;
             case 2: search(); break;
             case 3: insert(); break;
             case 4: deleteItem(); break;
@@ -29,7 +29,8 @@ int main() {
             case 7: saveFile(); break;
             case 0: cout << "Goodbye.\n"; break;
             default: cout << "Invalid menu.\n";
-    } while (menu != 0);
+      } 
+    }while (menu != 0);
 
     return 0;
-  }
+}
