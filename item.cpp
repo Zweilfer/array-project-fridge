@@ -57,7 +57,7 @@ void search() {
     string keyword;
     int found = 0;
 
-    cout << "\nSerch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ";
+    cout << "\nSearch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ";
     cin >> choice;
     cin.ignore();
 
