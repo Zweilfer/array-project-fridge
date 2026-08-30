@@ -6,7 +6,7 @@ using namespace std;
 
 const int MAX = 100;
 
-struct {
+struct Item{
   string name;
   string type;
   string expire;
