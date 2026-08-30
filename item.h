@@ -18,7 +18,7 @@ void display();
 void search();
 void insert();
 void deleteItem();
-void pickItem();
+void pickItems();
 void checkExpire();
 void saveFile();
 void saveHistory(coust char *detail);
