@@ -1,72 +1,123 @@
-#include "item.h"
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <sstream>
+#include "item.h"
 
 Item fridge[MAX];
 int countItem = 0;
 
-void create() {}
-
-void display() {
-  if (countItem == 0) {
-    cout << "The fridge is empty.\n";
+void create() {
+  ifstream file("fridge.txt");
+  if(!file){
+    cout << "No fridge file. Starting empty.";
     return;
   }
+  countItem = 0;
 
-  cout << "\n----- Fridge items -----\n";
-  for (int i = 0; i < countItem; i++) {
-    cout << i + 1 << ". " << fridge[i].name << " | " << fridge[i].type
-         << " | expire " << fridge[i].expire << " | qty " << fridge[i].qty
-         << "\n";
+  string line;
+  while (getline(file, line)) {
+    if (countItem >= MAX) break;
+
+    stringstream ss(line);
+    string name, type, expire;
+    int qty;
+
+    if (getline(ss, name, ',') &&
+        getline(ss, type, ',') &&
+        getline(ss, expire, ',') &&
+        (ss >> qty)) {
+      fridge[countItem].name = name;
+      fridge[countItem].type = type;
+      fridge[countItem].expire = expire;
+      fridge[countItem].qty = qty;
+      countItem++;
+    }
   }
+  file.close();
+}
+
+void display() {
+    if (countItem == 0) {
+        cout << "The fridge is empty.\n";
+        return;
+    }
+
+    cout << "\n----- Fridge items -----\n";
+    for (int i = 0; i < countItem; i++) {
+        cout << i + 1 << ". "
+             << fridge[i].name << " | "
+             << fridge[i].type << " | expire "
+             << fridge[i].expire << " | qty "
+             << fridge[i].qty << "\n";
+    }
 }
 
 void search() {
-  int choice;
-  string keyword;
-  int found = 0;
+    int choice;
+    string keyword;
+    int found = 0;
 
-  cout << "\nSerch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ";
-  cin >> choice;
-  cin.ignore();
+    cout << "\nSerch by:\n1. Name\n2. Type (e.g. Meat, Veg)\nSelect: ";
+    cin >> choice;
+    cin.ignore();
 
-  cout << "Enter keyword: ";
-  getline(cin, keyword);
+    cout << "Enter keyword: ";
+    getline(cin, keyword);
 
-  cout << "\n===== Srerch Results =====\n";
-  for (int i = 0; i < countItem; i++) {
-    if ((choice == 1 && fridge[i].name == keyword) ||
-        (choice == 2 && fridge[i].type == keyword)) {
-      cout << "- " << fridge[i].name << " | " << fridge[i].type << " |expire "
-           << fridge[i].expire << " |qty " << fridge[i].qty << "\n";
-      found = 1;
+    cout << "\n===== Srerch Results =====\n";
+    for (int i = 0; i < countItem; i++) {
+        if ((choice == 1 && fridge[i].name == keyword) ||
+            (choice == 2 && fridge[i].type == keyword)) {
+            cout << "- " << fridge[i].name
+                 << " | " << fridge[i].type
+                 << " |expire " << fridge[i].expire
+                 << " |qty " << fridge[i].qty << "/n";
+            found = 1;
+        }
     }
-  }
 
-  if (!found) {
-    cout << "No items found matching '" << keyword << "'.\n";
-  }
+    if (!found) {
+        cout << "No items found matching '" << keyword << "'.\n";
+    }
 }
 
 void insert() {
-  if (countItem >= MAX) {
-    cout << "Fridge is full. Cannot insert more items.\n";
-    return;
+  string name, type, expire;
+  int qty;
+
+  cout << "Enter item name: ";
+  cin.ignore();
+  getline(cin, name);
+
+  cout << "Enter item type: ";
+  getline(cin, type);
+
+  cout << "Enter expiration date (YYYY-MM-DD): ";
+  getline(cin, expire);
+
+  cout << "Enter quantity: ";
+  cin >> qty;
+
+  int foundIndex = -1;
+  for (int i = 0; i < countItem; i++) {
+    if (fridge[i].name == name && fridge[i].type == type && fridge[i].expire == expire) {
+      foundIndex = i;
+      break;
+    }
+  }
+
+  if (foundIndex != -1) {
+    fridge[foundIndex].qty += qty;
+    cout << "Item quantity updated successfully.\n";
   } else {
-    cout << "Enter item name: ";
-    cin.ignore();
-    getline(cin, fridge[countItem].name);
-
-    cout << "Enter item type: ";
-    getline(cin, fridge[countItem].type);
-
-    cout << "Enter expiration date (YYYY-MM-DD): ";
-    getline(cin, fridge[countItem].expire);
-
-    cout << "Enter quantity: ";
-    cin >> fridge[countItem].qty;
-
+    if (countItem >= MAX) {
+      cout << "Fridge is full. Cannot insert more items.\n";
+      return;
+    }
+    fridge[countItem].name = name;
+    fridge[countItem].type = type;
+    fridge[countItem].expire = expire;
+    fridge[countItem].qty = qty;
     countItem++;
     cout << "Item inserted successfully.\n";
   }
@@ -92,30 +143,63 @@ void deleteItem() {
   cout << "Item deleted successfully.\n";
 }
 
-void pickItems() {}
+void pickItems() {
+  
+}
 
-void checkExpire() {}
-
-void saveFile() {
-  ofstream file("fridge.txt");
-  if (!file) {
-    cout << "Cannot save file.\n";
+void checkExpire() {
+    if (countItem == 0) {
+    cout << "Fridge is empty.\n";
     return;
   }
 
+  string currentDate;
+
+  cout << "Enter current date (YYYY-MM-DD): ";
+  cin >> currentDate;
+
+  cout << "\n===== Expired Items =====\n";
+
+  int found = 0;
+
   for (int i = 0; i < countItem; i++) {
-    file << fridge[i].name << "," << fridge[i].type << "," << fridge[i].expire
-         << "," << fridge[i].qty << "\n";
+
+    if (fridge[i].expire == currentDate) {
+      cout << "- " << fridge[i].name
+           << " | " << fridge[i].type
+           << " | expire " << fridge[i].expire
+           << " | qty " << fridge[i].qty << "\n";
+     
+        found = 1;
+
+    }
   }
-  file.close();
-  cout << "Fridge data saved.\n";
+  if (!found) {
+    cout << "No expired items found for the date " << currentDate << ".\n";
+  }
+}
+
+void saveFile() {
+    ofstream file("fridge.txt");
+    if (!file) {
+        cout << "Cannot save file.\n";
+        return;
+    }
+
+    for (int i = 0; i < countItem; i++) {
+        file << fridge[i].name << ","
+             << fridge[i].type << ","
+             << fridge[i].expire << ","
+             << fridge[i].qty << "\n";
+    }
+    file.close();
+    cout << "Fridge data saved.\n";
 }
 
 void saveHistory(const string &detail) {
-  ofstream file("history.txt", ios::app);
-  if (!file)
-    return;
+    ofstream file("history.txt", ios::app);
+    if (!file) return;
 
-  file << "\n===== Picked items =====\n" << detail << "\n";
-  file.close();
+    file << "===== Picked items =====\n" << detail << "\n";
+    file.close();
 }
