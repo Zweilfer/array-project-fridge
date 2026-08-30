@@ -116,6 +116,6 @@ void saveHistory(const string &detail) {
   if (!file)
     return;
 
-  file << "===== Picked items =====\n" << detail << "\n";
+  file << "\n===== Picked items =====\n" << detail << "\n";
   file.close();
 }
