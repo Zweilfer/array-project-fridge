@@ -1,17 +1,20 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#define MAX 100
+#include <string>
+using namespace std;
 
-typedef struct {
-  char name[50];
-  char type[30];
-  char expire[20];
+const int MAX = 100;
+
+struct {
+  string name;
+  string type;
+  string expire;
   int  qty;
-} Item;
+};
 
 extern Item fridge[MAX];
-extern int count;
+extern int countItem;
 
 void create();
 void display();
@@ -21,6 +24,6 @@ void deleteItem();
 void pickItems();
 void checkExpire();
 void saveFile();
-void saveHistory(coust char *detail);
+void saveHistory(coust string &detail);
 
 #endif
