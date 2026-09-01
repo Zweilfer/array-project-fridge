@@ -7,10 +7,30 @@ using namespace std;
 Item fridge[MAX];
 int countItem = 0;
 
+bool isValidDate(const string &s) {
+    if (s.length() != 10 || s[4] != '-' || s[7] != '-') {
+        return false;
+    }
+    for (size_t i = 0; i < s.length(); i++) {
+        if (i == 4 || i == 7) continue;
+        if (!isdigit(s[i])) return false;
+    }
+    return true;
+}
+
+bool isValidQuantity(const string &s, int &num) {
+    if (s.empty()) return false;
+    for (size_t i = 0; i < s.size(); i++) {
+      if(s[i] < '0' || s[i] > '9') return false;
+    }
+    num = stoi(s);
+    return true;
+}
+
 void create() {
   ifstream file("fridge.txt");
   if(!file){
-    cout << "No fridge file. Starting empty.";
+    cout << "No fridge file. Starting empty.\n";
     return;
   }
   countItem = 0;
@@ -20,13 +40,17 @@ void create() {
     if (countItem >= MAX) break;
 
     stringstream ss(line);
-    string name, type, expire;
-    int qty;
+    string name, type, expire, qtyText;
 
     if (getline(ss, name, ',') &&
         getline(ss, type, ',') &&
         getline(ss, expire, ',') &&
-        (ss >> qty)) {
+        getline(ss, qtyText)) {
+        if (!qtyText.empty() && qtyText.back() == '\r') {
+            qtyText.pop_back();
+        }
+        int qty;
+        if(!isValidQuantity(qtyText, qty)) continue;
       fridge[countItem].name = name;
       fridge[countItem].type = type;
       fridge[countItem].expire = expire;
@@ -35,6 +59,7 @@ void create() {
     }
   }
   file.close();
+  cout << "Loaded " << countItem << " items from fridge.txt.\n";
 }
 
 void display() {
@@ -90,11 +115,11 @@ void search() {
 }
 
 void insert() {
-  string name, type, expire;
+  string name, type, expire, qtyText;
   int qty;
 
   cout << "Enter item name: ";
-  cin.ignore();
+  cin.ignore(1000, '\n');
   getline(cin, name);
 
   cout << "Enter item type: ";
@@ -102,9 +127,17 @@ void insert() {
 
   cout << "Enter expiration date (YYYY-MM-DD): ";
   getline(cin, expire);
+  if (!isValidDate(expire)) {
+    cout << "Invalid date format. Please use YYYY-MM-DD.\n";
+    return;
+  }
 
   cout << "Enter quantity: ";
-  cin >> qty;
+  cin >> qtyText;
+  if (!isValidQuantity(qtyText, qty) || qty <= 0) {
+    cout << "Invalid quantity.\n";
+    return;
+  }
 
   int foundIndex = -1;
   for (int i = 0; i < countItem; i++) {
@@ -139,8 +172,9 @@ void deleteItem() {
   display();
   int choice;
   cout << "Enter item number to delete (1 to " << countItem << "): ";
-  cin >> choice;
-  if (choice < 1 || choice > countItem) {
+  if (!(cin >> choice) || choice < 1 || choice > countItem) {
+    cin.clear();
+    cin.ignore(1000, '\n');
     cout << "Invalid item number.\n";
     return;
   }
@@ -163,9 +197,9 @@ void pickItems() {
 
     display();
     cout << "How many items to pick: ";
-    cin >> n;
-
-      if(n <= 0) {
+    if (!(cin >> n) || n <= 0) {
+        cin.clear();
+        cin.ignore(1000, '\n');
         cout << "Invalid number of items.\n";
         return;
     }
@@ -176,12 +210,17 @@ void pickItems() {
     }
 
     for (int k = 0; k < n; k++) {
-        cin.ignore();
+        cin.ignore(1000, '\n');
         cout << "Name of item " << k + 1 << ": ";
         getline(cin, name);
 
         cout << "Quantity to use: ";
-        cin >> useQty;
+        if (!(cin >> useQty) || useQty <= 0) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid quantity.\n";
+            continue;
+        }
 
         int found = -1;
         for (int i = 0; i < countItem; i++) {
@@ -193,11 +232,6 @@ void pickItems() {
 
         if (found == -1) {
             cout << name << " not found.\n";
-            continue;
-        }
-
-        if (useQty <= 0) {
-            cout << "Invalid quantity.\n";
             continue;
         }
 
@@ -217,8 +251,12 @@ void pickItems() {
         }
     }
 
-    cout << "\n===== Picked items =====\n" << summary;
-    saveHistory(summary);
+    if (!summary.empty()) {
+        cout << "\n===== Picked items =====\n" << summary;
+        saveHistory(summary);
+    } else {
+        cout << "No items were picked.\n";
+    }
 }
 
 void checkExpire() {
@@ -232,14 +270,19 @@ void checkExpire() {
   cout << "Enter current date (YYYY-MM-DD): ";
   cin >> currentDate;
 
+  if (!isValidDate(currentDate)) {
+    cout << "Invalid date format. Please use YYYY-MM-DD.\n";
+    return;
+  }
+
   cout << "\n===== Expired Items =====\n";
 
   int found = 0;
 
   for (int i = 0; i < countItem; i++) {
-
-    if (fridge[i].expire == currentDate) {
-      cout << " - " << fridge[i].name
+  
+    if (fridge[i].expire <= currentDate) {
+      cout << "- " << fridge[i].name
            << " | " << fridge[i].type
            << " | expire " << fridge[i].expire
            << " | qty " << fridge[i].qty << "\n";
@@ -277,3 +320,4 @@ void saveHistory(const string &detail) {
     file << "\n===== Picked items =====\n" << detail << "\n";
     file.close();
 }
+
