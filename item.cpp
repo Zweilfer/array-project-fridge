@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "item.h"
+using namespace std;
 
 Item fridge[MAX];
 int countItem = 0;
@@ -164,6 +165,16 @@ void pickItems() {
     cout << "How many items to pick: ";
     cin >> n;
 
+      if(n <= 0) {
+        cout << "Invalid number of items.\n";
+        return;
+    }
+
+    if (n > countItem) {
+        cout << "Not enough items in the fridge. Available: " << countItem << "\n";
+        return;
+    }
+
     for (int k = 0; k < n; k++) {
         cin.ignore();
         cout << "Name of item " << k + 1 << ": ";
@@ -228,7 +239,7 @@ void checkExpire() {
   for (int i = 0; i < countItem; i++) {
 
     if (fridge[i].expire == currentDate) {
-      cout << "- " << fridge[i].name
+      cout << " - " << fridge[i].name
            << " | " << fridge[i].type
            << " | expire " << fridge[i].expire
            << " | qty " << fridge[i].qty << "\n";
