@@ -15,9 +15,12 @@ int main() {
     cout << "5. Pick items\n";
     cout << "6. Check expired items\n";
     cout << "7. Save file\n";
+    cout << "8. Check near-expire\n";
+    cout << "9. Sort by expiration date\n";
+    cout << "10. Delete expired items\n";
     cout << "0. Exit\n";
     cout << "Select menu: ";
-    
+
     if (!(cin >> menu)) {
       cin.clear();
       cin.ignore(1000, '\n');
@@ -34,11 +37,28 @@ int main() {
       case 5: pickItems(); break;
       case 6: checkExpire(); break;
       case 7: saveFile(); break;
-      case 0: cout << "Goodbye.\n"; break;
-      default: cout << "Invalid menu.\n"; break;
-    } 
+      case 8: checkNearExpire(); break;
+      case 9: sortByExpire(); break;
+      case 10: deleteExpired(); break;
+      case 0: {
+        char saveChoice;
+        cout << "Save fridge data before exit? (y/n): ";
+        cin >> saveChoice;
+
+        if (saveChoice == 'y' || saveChoice == 'Y') {
+          saveFile();
+        } else {
+          cout << "Exit without saving.\n";
+        }
+
+        cout << "Goodbye.\n";
+        break;
+      }
+      default:
+        cout << "Invalid menu.\n";
+        break;
+    }
   } while (menu != 0);
 
   return 0;
 }
-
