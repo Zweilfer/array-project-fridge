@@ -6,11 +6,11 @@ using namespace std;
 
 const int MAX = 100;
 
-struct Item{
+struct Item {
   string name;
   string type;
   string expire;
-  int  qty;
+  int qty;
 };
 
 extern Item fridge[MAX];
@@ -23,7 +23,11 @@ void insert();
 void deleteItem();
 void pickItems();
 void checkExpire();
+void checkNearExpire();
 void saveFile();
 void saveHistory(const string &detail);
+int dateToDays(const string &s);
+void sortByExpire();
+void deleteExpired();
 
 #endif
