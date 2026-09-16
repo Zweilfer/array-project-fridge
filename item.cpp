@@ -377,8 +377,7 @@ void checkNearExpire() {
     int today = dateToDays(currentDate);
     int nearDays = 3;
     int foundNear = 0;
-    int nearestIndex = -1;
-    int nearestLeft = 999999;
+    int minDaysLeft = 999999;
 
     cout << "\n===== Items expiring in 0-3 days =====\n";
 
@@ -387,9 +386,8 @@ void checkNearExpire() {
 
         int left = dateToDays(fridge[i].expire) - today;
 
-        if (left < nearestLeft) {
-            nearestLeft = left;
-            nearestIndex = i;
+        if (left < minDaysLeft) {
+            minDaysLeft = left;
         }
 
         if (left >= 0 && left <= nearDays) {
@@ -406,24 +404,40 @@ void checkNearExpire() {
         cout << "No items will expire within 3 days.\n";
     }
 
-    if (nearestIndex != -1) {
-        cout << "\n===== Closest to expire =====\n";
-        cout << fridge[nearestIndex].name
-             << " | " << fridge[nearestIndex].type
-             << " | expire " << fridge[nearestIndex].expire
-             << " | qty " << fridge[nearestIndex].qty
-             << " | ";
+    
+    // Check if the closest items are already expired vs unexpired
+    if (minDaysLeft != 999999) {
+        if (minDaysLeft < 0) {
+            cout << "\n===== Expired Items (Needs Attention) =====\n";
+            for (int i = 0; i < countItem; i++) {
+                if (!isValidDate(fridge[i].expire)) continue;
 
-        if (nearestLeft < 0) {
-            cout << "already expired " << -nearestLeft << " day(s) ago\n";
-        } else if (nearestLeft == 0) {
-            cout << "expires today\n";
+                int left = dateToDays(fridge[i].expire) - today;
+                if (left < 0) {
+                    cout << "- " << fridge[i].name
+                         << " | " << fridge[i].type
+                         << " | expire " << fridge[i].expire
+                         << " | qty " << fridge[i].qty
+                         << " | expired " << -left << " day(s) ago\n";
+                }
+            }
         } else {
-            cout << nearestLeft << " day(s) left\n";
+            cout << "\n===== Closest to expire =====\n";
+            for (int i = 0; i < countItem; i++) {
+                if (!isValidDate(fridge[i].expire)) continue;
+
+                int left = dateToDays(fridge[i].expire) - today;
+                if (left == minDaysLeft) {
+                    cout << "- " << fridge[i].name
+                         << " | " << fridge[i].type
+                         << " | expire " << fridge[i].expire
+                         << " | qty " << fridge[i].qty
+                         << " | " << (left == 0 ? "expires today" : to_string(left) + " day(s) left") << "\n";
+                }
+            }
         }
     }
 }
-
 void sortByExpire() {
     if (countItem <= 1) {
         cout << "Not enough items to sort.\n";
