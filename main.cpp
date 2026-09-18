@@ -18,6 +18,7 @@ int main() {
     cout << "8. Check near-expire\n";
     cout << "9. Sort by expiration date\n";
     cout << "10. Delete expired items\n";
+    cout << "11. Edit item\n";
     cout << "0. Exit\n";
     cout << "Select menu: ";
 
@@ -40,6 +41,7 @@ int main() {
       case 8: checkNearExpire(); break;
       case 9: sortByExpire(); break;
       case 10: deleteExpired(); break;
+      case 11: editItem(); break;
       case 0: {
         char saveChoice;
         cout << "Save fridge data before exit? (y/n): ";

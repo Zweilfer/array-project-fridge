@@ -485,3 +485,94 @@ void saveHistory(const string &detail) {
     file << "\n===== Picked items =====\n" << detail << "\n";
     file.close();
 }
+
+void editItem() {
+    if (countItem == 0) {
+        cout << "Fridge is empty.\n";
+        return;
+    }
+
+    display();
+
+    int choice;
+    cout << "\nEnter item number to edit (1 to " << countItem << "): ";
+    if (!(cin >> choice) || choice < 1 || choice > countItem) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Invalid item number.\n";
+        return;
+    }
+
+    int idx = choice - 1;
+    bool editing = true;
+
+    while (editing) {
+        cout << "\n--- Editing: " << fridge[idx].name << " ---\n";
+        cout << "1. Name (" << fridge[idx].name << ")\n";
+        cout << "2. Type (" << fridge[idx].type << ")\n";
+        cout << "3. Expiration Date (" << fridge[idx].expire << ")\n";
+        cout << "4. Quantity (" << fridge[idx].qty << ")\n";
+        cout << "Select field to edit (1-4): ";
+
+        int fieldChoice;
+        if (!(cin >> fieldChoice) || fieldChoice < 1 || fieldChoice > 4) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid choice. Please select 1-4.\n";
+            continue;
+        }
+
+        cin.ignore(1000, '\n');
+
+        if (fieldChoice == 1) {
+            cout << "Enter new name: ";
+            getline(cin, fridge[idx].name);
+            cout << "Name updated successfully.\n";
+        } 
+        else if (fieldChoice == 2) {
+            cout << "Enter new type: ";
+            getline(cin, fridge[idx].type);
+            cout << "Type updated successfully.\n";
+        } 
+        else if (fieldChoice == 3) {
+            string newExpire;
+            cout << "Enter new expiration date (YYYY-MM-DD): ";
+            getline(cin, newExpire);
+            if (!isValidDate(newExpire)) {
+                cout << "Invalid date format. Field was not changed.\n";
+            } else {
+                fridge[idx].expire = newExpire;
+                cout << "Expiration date updated successfully.\n";
+            }
+        } 
+        else if (fieldChoice == 4) {
+            string qtyText;
+            int newQty;
+            cout << "Enter new quantity: ";
+            cin >> qtyText;
+            if (!isValidQuantity(qtyText, newQty) || newQty <= 0) {
+                cout << "Invalid quantity. Field was not changed.\n";
+            } else {
+                fridge[idx].qty = newQty;
+                cout << "Quantity updated successfully.\n";
+            }
+        }
+
+        char doneChoice;
+        while (true) {
+            cout << "\nDo you want to edit anything else for this item? (y/n): ";
+            if (cin >> doneChoice) {
+                if (doneChoice == 'n' || doneChoice == 'N') {
+                    editing = false;
+                    cout << "Finished editing item.\n";
+                    break;
+                } else if (doneChoice == 'y' || doneChoice == 'Y') {
+                    break;
+                }
+            }
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Please enter 'y' or 'n'.\n";
+        }
+    }
+}

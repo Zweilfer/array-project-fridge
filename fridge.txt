@@ -1,0 +1,4 @@
+Water,drink,2028-09-16,12
+Milk,drink,2026-09-10,1
+Strawberry Milk,drink,2026-09-20,2
+Green Tea,drink,2026-09-19,1

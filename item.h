@@ -29,5 +29,6 @@ void saveHistory(const string &detail);
 int dateToDays(const string &s);
 void sortByExpire();
 void deleteExpired();
+void editItem();
 
 #endif
